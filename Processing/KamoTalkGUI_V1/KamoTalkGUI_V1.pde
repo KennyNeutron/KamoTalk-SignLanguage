@@ -11,27 +11,38 @@ color Color_CYAN= color(0, 255, 255);
 color Color_MAGENTA= color(255, 0, 255);
 color Color_YELLOW= color(255, 255, 0);
 
+final int csrX=0xABAB;
+final int csrY=0xABAC;
+final int csrA=0xABAD;
+final int csrB=0xABAE;
 
+final int TRANSLATE=0x0000;
+final int ADD_GESTURE=0x0001;
+final int SETTINGS=0x0002;
 
 
 void setup() {
   size(1200, 650);
+  frameRate(60);
   background(#808080);
 
   Font_Default_Regular=createFont("OpenSansRegular.ttf", 48);
   Font_Default_Bold=createFont("OpenSansBold.ttf", 48);
 
-  fill(#ffffff);
-  strokeWeight(0);
-  textFont(Font_Default_Bold, 30);
-  textSize(30);
-  textAlign(CENTER, CENTER);
-  text("KAMOTALK 2024", width/2, 30);
 
-  
 }
 
 
 void draw() {
+  background(#808080);
+  
   display_HOME();
+
+
+  println(ButtonGetCursor(TRANSLATE, csrX));
+  println(ButtonGetCursor(TRANSLATE, csrA));
+  println(mouseX);
+  println(ButtonHovered(TRANSLATE));
+
+
 }
