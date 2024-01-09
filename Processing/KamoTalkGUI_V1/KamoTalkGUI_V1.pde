@@ -1,3 +1,5 @@
+import guru.ttslib.*; //<>//
+
 //KamoTalk V1.0.0
 
 PFont Font_Default_Regular;
@@ -20,22 +22,22 @@ final int TRANSLATE=0x0000;
 final int ADD_GESTURE=0x0001;
 final int SETTINGS=0x0002;
 
+TTS tts;
 
 void setup() {
   size(1200, 650);
+  tts = new TTS();
   frameRate(60);
   background(#808080);
 
   Font_Default_Regular=createFont("OpenSansRegular.ttf", 48);
   Font_Default_Bold=createFont("OpenSansBold.ttf", 48);
-
-
 }
 
 
 void draw() {
   background(#808080);
-  
+
   display_HOME();
 
 
@@ -43,6 +45,19 @@ void draw() {
   println(ButtonGetCursor(TRANSLATE, csrA));
   println(mouseX);
   println(ButtonHovered(TRANSLATE));
+}
 
+void mousePressed() {
+  tts.speak("PRESSED ");
+  if (ButtonHovered(TRANSLATE)) {
+    tts.speak("TRANSLATE");
+  } else if (ButtonHovered(ADD_GESTURE)) {
+    tts.speak("ADD GESTURE");
+  } else if (ButtonHovered(SETTINGS)) {
+    tts.speak("SETTINGS");
+  } else {
+    tts.speak("NOTHING");
+  }
 
+  //tts.speak("Oi! Eu sou um esboço Processing falando");
 }
