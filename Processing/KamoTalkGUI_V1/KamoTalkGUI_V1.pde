@@ -44,7 +44,7 @@ void setup() {
   Font_Default_Bold=createFont("OpenSansBold.ttf", 48);
 
   String portName = Serial.list()[0];
-  mySerialPort = new Serial(this, "COM13", 115200);
+  mySerialPort = new Serial(this, portName, 115200);
   ColorBG=color(#808080);
 
   background(ColorBG);
@@ -64,17 +64,20 @@ void draw() {
 
 
   if (mySerialPort.available()>0) {
+    str_ToSpeak_printed=false;
+    str_ToSpeak="";
     MSerialPort_Val=mySerialPort.read();
     //println(str(MSerialPort_Val));
     //serialPrintOnScreen(str(MSerialPort_Val));
     if (MSerialPort_Val=='<') {
       while (MSerialPort_Val!='>') {
-          while (mySerialPort.available()==0) ;
+        while (mySerialPort.available()==0) ;
         MSerialPort_Val=mySerialPort.read();
+        str_ToSpeak=str_ToSpeak+char(MSerialPort_Val);
       }
       if (!str_ToSpeak_printed) {
-        serialPrintOnScreen(str_ToSpeak);
         str_ToSpeak_printed=true;
+        tts.speak(str_ToSpeak);
       }
     }
   }
