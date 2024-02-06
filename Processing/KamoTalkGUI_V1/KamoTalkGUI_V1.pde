@@ -1,6 +1,7 @@
-import guru.ttslib.*; //<>//
+//KamoTalk V1.0.0 //<>//
 
-//KamoTalk V1.0.0
+import guru.ttslib.*;
+import processing.serial.*;
 
 PFont Font_Default_Regular;
 PFont Font_Default_Bold;
@@ -13,6 +14,8 @@ color Color_CYAN= color(0, 255, 255);
 color Color_MAGENTA= color(255, 0, 255);
 color Color_YELLOW= color(255, 255, 0);
 
+color ColorBG=color(#808080);
+
 final int csrX=0xABAB;
 final int csrY=0xABAC;
 final int csrA=0xABAD;
@@ -24,6 +27,13 @@ final int SETTINGS=0x0002;
 
 TTS tts;
 
+Serial mySerialPort;
+int MSerialPort_Val;
+String str_ToSpeak="st";
+
+boolean str_ToSpeak_printed=false;
+
+
 void setup() {
   size(1200, 650);
   tts = new TTS();
@@ -32,11 +42,17 @@ void setup() {
 
   Font_Default_Regular=createFont("OpenSansRegular.ttf", 48);
   Font_Default_Bold=createFont("OpenSansBold.ttf", 48);
+
+  String portName = Serial.list()[0];
+  mySerialPort = new Serial(this, "COM13", 115200);
+  ColorBG=color(#808080);
+
+  background(ColorBG);
 }
 
 
 void draw() {
-  background(#808080);
+
 
   display_HOME();
 
@@ -45,7 +61,36 @@ void draw() {
   println(ButtonGetCursor(TRANSLATE, csrA));
   println(mouseX);
   println(ButtonHovered(TRANSLATE));
+
+
+  if (mySerialPort.available()>0) {
+    MSerialPort_Val=mySerialPort.read();
+    //println(str(MSerialPort_Val));
+    //serialPrintOnScreen(str(MSerialPort_Val));
+    if (MSerialPort_Val=='<') {
+      while (MSerialPort_Val!='>') {
+          while (mySerialPort.available()==0) ;
+        MSerialPort_Val=mySerialPort.read();
+      }
+      if (!str_ToSpeak_printed) {
+        serialPrintOnScreen(str_ToSpeak);
+        str_ToSpeak_printed=true;
+      }
+    }
+  }
 }
+
+
+void serialPrintOnScreen(String StrToPrint) {
+  fill(#ffffff);
+  strokeWeight(0);
+  textFont(Font_Default_Bold, 30);
+  textSize(20);
+  textAlign(CENTER, CENTER);
+  text(StrToPrint, 10, 10);
+  //delay(500);
+}
+
 
 void mousePressed() {
   tts.speak("PRESSED ");
