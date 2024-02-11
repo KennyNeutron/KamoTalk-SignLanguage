@@ -44,7 +44,7 @@ void setup() {
   Font_Default_Bold=createFont("OpenSansBold.ttf", 48);
 
   String portName = Serial.list()[0];
-  mySerialPort = new Serial(this, portName, 115200);
+  mySerialPort = new Serial(this, "COM13", 115200);
   ColorBG=color(#808080);
 
   background(ColorBG);
