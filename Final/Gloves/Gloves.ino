@@ -1,22 +1,23 @@
-#define Sensor_Thumb A0
-#define Sensor_Index A1
-#define Sensor_Middle A2
-#define Sensor_Ring A3
-#define Sensor_Pinky A6
+#include <MPU6050_tockn.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+#include "variables.h"
+#include "DataStructure.h"
 
-int Val_Thumb = 0;
-int Val_Index = 0;
-int Val_Middle = 0;
-int Val_Ring = 0;
-int Val_Pinky = 0;
+RF24 radio(9, 10); // CE, CSN
+const byte address[6] = "PT001";
 
-int prev_ValThumb = 0;
-int prev_ValIndex = 0;
-int prev_ValMiddle = 0;
-int prev_ValRing = 0;
-int prev_ValPinky = 0;
+MPU6050 mpu6050(Wire);
+
+#define LEDblue 8
+
+uint32_t ihap = 0;
 
 void setup() {
+  pinMode(LEDblue, OUTPUT);
+  LEDon();
   Serial.begin(115200);
   Serial.println("Sign Language Gloves on ESP32");
   Serial.println("SYSTEM STARTING...\n\n\n");
@@ -27,9 +28,43 @@ void setup() {
   pinMode(Sensor_Ring, INPUT);
   pinMode(Sensor_Pinky, INPUT);
 
+  if (!radio.begin()) {
+    Serial.println("NRF24L01 Hardware Didn't Respond");
+  }
+  Serial.println("NRF24L01 Transmitter Mode");
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setDataRate(RF24_250KBPS);
+  radio.openWritingPipe(address);
+  radio.stopListening();
+
+  Wire.begin();
+  mpu6050.begin();
+  mpu6050.calcGyroOffsets(true);
+  LEDoff();
+  Serial.println("\n\n\nStarting in 2 seconds");
+  delay(2000);
+
+  //  Serial.println("\n\n\nPOSITION...");
+  //  delay(3000);
+  //  Serial.println("\n\n\nSTART READING....");
+  //  delay(2000);
+  //  Val_Thumb = analogRead(Sensor_Thumb);
+  //  Val_Index = analogRead(Sensor_Index);
+  //  Val_Middle = analogRead(Sensor_Middle);
+  //  Val_Ring = analogRead(Sensor_Ring);
+  //  Val_Pinky = analogRead(Sensor_Pinky);
+  //
+  //  mpu6050.update();
+  //  KamoTalk_GyroX = mpu6050.getAngleX();
+  //  KamoTalk_GyroY = mpu6050.getAngleY();
+  //  KamoTalk_GyroZ = mpu6050.getAngleZ();
+  //  delay(100);
+  //  TestSensorValues();
 }
 
-int ThisTolerance = 20;
+
+
+
 void loop() {
   Val_Thumb = analogRead(Sensor_Thumb);
   Val_Index = analogRead(Sensor_Index);
@@ -37,60 +72,69 @@ void loop() {
   Val_Ring = analogRead(Sensor_Ring);
   Val_Pinky = analogRead(Sensor_Pinky);
 
+  mpu6050.update();
+  KamoTalk_GyroX = mpu6050.getAngleX();
+  KamoTalk_GyroY = mpu6050.getAngleY();
+  KamoTalk_GyroZ = mpu6050.getAngleZ();
 
-//  TestSensorValues();
-
-  if (TestRange(Val_Thumb, 250, ThisTolerance) && TestRange(Val_Index, 320, ThisTolerance) && TestRange(Val_Middle, 285, ThisTolerance) && TestRange(Val_Ring, 130, ThisTolerance) && TestRange(Val_Pinky, 350, ThisTolerance)) {
-    Serial.println("Rock and Roll");
-    //Serial.println("Thumb:" + String(Val_Thumb));
-  }
-
-  if (TestRange(Val_Thumb, 260, ThisTolerance) && TestRange(Val_Index, 150, ThisTolerance) && TestRange(Val_Middle, 475, ThisTolerance) && TestRange(Val_Ring, 135, ThisTolerance) && TestRange(Val_Pinky, 220, ThisTolerance)) {
-    Serial.println("Pakyu Bitch");
-    //Serial.println("Thumb:" + String(Val_Thumb));
-  }
-
-
-  delay(1000);
-
+  //Correspond();
+  //TestSensorValues();
+  NRF_SendData();
 
 
 }
 
+void NRF_SendData() {
+  payload.kt_GyroX = KamoTalk_GyroX;
+  payload.kt_GyroY = KamoTalk_GyroY;
+  payload.kt_GyroZ = KamoTalk_GyroZ;
 
-bool TestRange(int Value, int EqualTo, int Tolerance) {
-  if (Value <= (EqualTo + Tolerance) && Value >= (EqualTo - Tolerance)) {
-    return true;
-  } else {
-    return false;
+  payload.adc_Thumb = Val_Thumb;
+  payload.adc_Index = Val_Index;
+  payload.adc_Middle = Val_Middle;
+  payload.adc_Ring = Val_Ring;
+  payload.adc_Pinky = Val_Pinky;
+
+  payload.byteThumb = ThumbByte();
+  LEDon();
+  radio.write(&payload, sizeof(PayloadData));
+  LEDoff();
+}
+
+void Correspond() {
+  //  if ( TestGesture(250, 320, 285, 130, 350, UnitTolerance)) {
+  //    Serial.println("Rock and Roll");
+  //    delay(2000);
+  //  }
+
+
+  //  if (TestGesture(290,  200,  475,  135, 220, UnitTolerance)) {
+  //    Serial.println("Pakyu Bitch");
+  //    delay(2000);
+  //  }
+
+  if (TestGesture(270,  160,  320,  140, 210, UnitTolerance) && TestGyroGesture(103.61, -8.94, 60.75 , GyroTolerance) && ThumbByte() == 255) {
+    Serial.println("A");
+    delay(100);
   }
-  return false;
+
+  if (TestGesture(210,  295,  485,  205, 420, UnitTolerance) && TestGyroGesture(103.61, -8.94, 60.75 , GyroTolerance) && ThumbByte() == 255) {
+    Serial.println("B");
+    delay(100);
+  }
+
+  if (TestGesture(244,  200,  343,  135 , 290, UnitTolerance) && TestGyroGesture(103.61, -8.94, 60.75 , GyroTolerance) && ThumbByte() == 255) {
+    Serial.println("C");
+    delay(100);
+  }
+
 }
 
 
-void TestSensorValues() {
-  if (abs(prev_ValThumb - Val_Thumb) > 15) {
-    Serial.println("Thumb:" + String(Val_Thumb));
-    prev_ValThumb = Val_Thumb;
-  }
+void LEDon() {
+  digitalWrite(LEDblue, 1);
+}
 
-  if (abs(prev_ValIndex - Val_Index) > 15) {
-    Serial.println("Index:" + String(Val_Index));
-    prev_ValIndex = Val_Index;
-  }
-
-  if (abs(prev_ValMiddle - Val_Middle) > 15) {
-    Serial.println("Middle:" + String(Val_Middle));
-    prev_ValMiddle = Val_Middle;
-  }
-
-  if (abs(prev_ValRing - Val_Ring) > 15) {
-    Serial.println("Ring:" + String(Val_Ring));
-    prev_ValRing = Val_Ring;
-  }
-
-  if (abs(prev_ValPinky - Val_Pinky) > 15) {
-    Serial.println("Pinky:" + String(Val_Pinky));
-    prev_ValPinky = Val_Pinky;
-  }
+void LEDoff() {
+  digitalWrite(LEDblue, 0);
 }
