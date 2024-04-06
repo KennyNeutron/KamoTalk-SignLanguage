@@ -32,6 +32,6 @@ int UnitTolerance = 30;
 
 float GyroTolerance=30.0;
 
-float KamoTalk_GyroX=0.0;
-float KamoTalk_GyroY=0.0;
-float KamoTalk_GyroZ=0.0;
+int KamoTalk_GyroX=0;
+int KamoTalk_GyroY=0;
+int KamoTalk_GyroZ=0;

@@ -2,26 +2,31 @@
 //Screen Address: 0x0000
 
 
-boolean display_HOME_initialize=false;
+boolean DisplayHome_init=false;
 
 
-void display_HOME() {
-  fill(#ffffff);
+void DisplayHome() {
+  if(!DisplayHome_init){
+    DisplayHome_Setup();
+  }
+  fill(#000000);
   strokeWeight(0);
-  textFont(Font_Default_Bold, 30);
+  textFont(Font_Default_Regular, 30);
   textSize(50);
   textAlign(CENTER, CENTER);
   text("KAMOTALK 2024", width/2, 30);
+
+  textSize(10);
+  text(str_ToSpeak, width/2, 10);
 
 
   PrintButton(TRANSLATE);
 
   PrintButton(ADD_GESTURE);
-
-
 }
 
 
-void display_HOME_setup() {
-  display_HOME_initialize=true;
+void DisplayHome_Setup() {
+  background(ColorBG);
+  DisplayHome_init=true;
 }

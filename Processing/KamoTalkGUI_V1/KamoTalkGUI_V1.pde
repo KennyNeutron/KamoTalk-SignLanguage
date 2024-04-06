@@ -33,6 +33,8 @@ String str_ToSpeak="st";
 
 boolean str_ToSpeak_printed=false;
 
+int currentScreen=0x0000;
+
 
 void setup() {
   size(1200, 650);
@@ -44,17 +46,32 @@ void setup() {
   Font_Default_Bold=createFont("OpenSansBold.ttf", 48);
 
   String portName = Serial.list()[0];
-  mySerialPort = new Serial(this, "COM13", 115200);
+  mySerialPort = new Serial(this, "COM4", 9600);
   ColorBG=color(#808080);
 
   background(ColorBG);
+
+  currentScreen=0x0000;
 }
 
 
 void draw() {
 
+  switch(currentScreen) {
+  case 0x0000:
+    DisplayHome();
+    break;
+  case 0x1000:
+    DisplayTranslate();
+    break;
+  case 0x3000:
+    DisplaySettings();
+    break;
+  default:
+    DisplayHome();
+    break;
+  }
 
-  display_HOME();
 
 
   println(ButtonGetCursor(TRANSLATE, csrX));
@@ -63,24 +80,31 @@ void draw() {
   println(ButtonHovered(TRANSLATE));
 
 
-  if (mySerialPort.available()>0) {
-    str_ToSpeak_printed=false;
-    str_ToSpeak="";
-    MSerialPort_Val=mySerialPort.read();
-    //println(str(MSerialPort_Val));
-    //serialPrintOnScreen(str(MSerialPort_Val));
-    if (MSerialPort_Val=='<') {
-      while (MSerialPort_Val!='>') {
-        while (mySerialPort.available()==0) ;
-        MSerialPort_Val=mySerialPort.read();
-        str_ToSpeak=str_ToSpeak+char(MSerialPort_Val);
-      }
-      if (!str_ToSpeak_printed) {
-        str_ToSpeak_printed=true;
-        tts.speak(str_ToSpeak);
-      }
-    }
-  }
+  //if (mySerialPort.available()>0) {
+  //  str_ToSpeak_printed=false;
+  //  str_ToSpeak="";
+  //  MSerialPort_Val=mySerialPort.read();
+  //  //println(str(MSerialPort_Val));
+  //  //serialPrintOnScreen(str(MSerialPort_Val));
+  //  if (MSerialPort_Val=='<') {
+  //    while (MSerialPort_Val!='>') {
+  //      while (mySerialPort.available()==0) ;
+  //      MSerialPort_Val=mySerialPort.read();
+  //      str_ToSpeak=str_ToSpeak+char(MSerialPort_Val);
+  //    }
+  //    if (!str_ToSpeak_printed) {
+  //      str_ToSpeak_printed=true;
+  //      tts.speak(str_ToSpeak);
+  //    }
+  //  }
+  //}
+
+  fill(#000000);
+  strokeWeight(0);
+  textFont(Font_Default_Regular, 30);
+  textSize(15);
+  textAlign(LEFT, TOP);
+  text("SCREEN:"+hex(currentScreen), 0, 0);
 }
 
 
@@ -96,16 +120,37 @@ void serialPrintOnScreen(String StrToPrint) {
 
 
 void mousePressed() {
-  tts.speak("PRESSED ");
+  //tts.speak("PRESSED ");
+  //tts.speak("The quick brown fox jumps over the lazy dog");
   if (ButtonHovered(TRANSLATE)) {
-    tts.speak("TRANSLATE");
+    //tts.speak("TRANSLATE");
+    DisplayHome_init=false;
+    currentScreen=0x1000;
   } else if (ButtonHovered(ADD_GESTURE)) {
-    tts.speak("ADD GESTURE");
+    //tts.speak("ADD GESTURE");
   } else if (ButtonHovered(SETTINGS)) {
-    tts.speak("SETTINGS");
+    //tts.speak("SETTINGS");
+    DisplayHome_init=false;
+    currentScreen=0x3000;
   } else {
-    tts.speak("NOTHING");
+    //tts.speak("NOTHING");
   }
 
+  //Settings Screen
+  if (currentScreen==0x3000) {
+    //BackButton
+    if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
+      currentScreen=0x0000;
+      DisplaySettings_init=false;
+    }
+  }
+
+  if (currentScreen==0x1000) {
+    //BackButton
+    if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
+      currentScreen=0x0000;
+      DisplayTranslate_init=false;
+    }
+  }
   //tts.speak("Oi! Eu sou um esboço Processing falando");
 }

@@ -11,6 +11,7 @@ int prev_ValRing = 0;
 int prev_ValPinky = 0;
 
 int ThumbByte = 0;
+int MiddleByte = 0;
 
 #define pad_thumb 7
 #define pad_index 5
@@ -25,12 +26,11 @@ bool thumb_to_ring = false;
 bool thumb_to_pinky = false;
 
 int UnitTolerance = 40;
+int GyroTolerance = 80;
 
-float GyroTolerance = 100.00;
-
-float KamoTalk_GyroX = 0.0;
-float KamoTalk_GyroY = 0.0;
-float KamoTalk_GyroZ = 0.0;
+int KamoTalk_GyroX = 0;
+int KamoTalk_GyroY = 0;
+int KamoTalk_GyroZ = 0;
 
 char NowSigning = ' ';
 char Prev_NowSigning = ' ';
@@ -38,4 +38,9 @@ char Prev_NowSigning = ' ';
 uint8_t GestureCount = 0;
 bool GestureAccepted = false;
 
-bool SignPrinted=false;
+bool SignPrinted = false;
+
+
+
+String WordToSay = "";
+bool HasSpoken = true;

@@ -2,9 +2,9 @@
 // Max size of this struct is 32 bytes - NRF24L01 buffer limit
 
 struct PayloadData {
-  float kt_GyroX=0.0;
-  float kt_GyroY=0.0;
-  float kt_GyroZ=0.0;
+  int kt_GyroX=0;
+  int kt_GyroY=0;
+  int kt_GyroZ=0;
   
   int adc_Thumb = 0;
   int adc_Index = 0;
