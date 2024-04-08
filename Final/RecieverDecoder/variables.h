@@ -25,12 +25,12 @@ bool thumb_to_middle = false;
 bool thumb_to_ring = false;
 bool thumb_to_pinky = false;
 
-int UnitTolerance = 40;
-int GyroTolerance = 80;
+int UnitTolerance = 80;
+float GyroTolerance = 20.00;
 
-int KamoTalk_GyroX = 0;
-int KamoTalk_GyroY = 0;
-int KamoTalk_GyroZ = 0;
+float KamoTalk_GyroX = 0.00;
+float KamoTalk_GyroY = 0.00;
+float KamoTalk_GyroZ = 0.00;
 
 char NowSigning = ' ';
 char Prev_NowSigning = ' ';
