@@ -1,4 +1,4 @@
-uint8_t gesture(char Letter, float gX, float gY, float gZ, int vThumb, int vIndex, int vMiddle, int vRing, int vPinky, int vThumbByte, int vMiddleByte) {
+uint8_t gesture(char Letter, float gX, float gY, float gZ, int vThumb, int vIndex, int vMiddle, int vRing, int vPinky, int vThumbByte, int vIndexByte, int vMiddleByte, int vRingByte, int vPinkyByte) {
   byte GestureVal = 0;
   //check GyroX
   if (VerifyValueFloat(KamoTalk_GyroX, gX, GyroTolerance)) {
@@ -45,11 +45,25 @@ uint8_t gesture(char Letter, float gX, float gY, float gZ, int vThumb, int vInde
     GestureVal += 10;
   }
 
+  if (IndexByte == vIndexByte) {
+    GestureVal += 10;
+  }
+
   if (MiddleByte == vMiddleByte) {
     GestureVal += 10;
   }
 
-  NowSigning = Letter;
+  if (RingByte == vRingByte) {
+    GestureVal += 10;
+  }
+
+  if (PinkyByte == vPinkyByte) {
+    GestureVal += 10;
+  }
+
+
+
+  //NowSigning = Letter;
 
 
   return GestureVal;

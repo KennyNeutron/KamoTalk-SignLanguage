@@ -12,6 +12,6 @@ void DecryptData() {
   ThumbByte = payload.byteThumb;
   IndexByte = payload.byteIndex;
   MiddleByte = payload.byteMiddle;
-  
   RingByte = payload.byteRing;
+  PinkyByte = payload.bytePinky;
 }

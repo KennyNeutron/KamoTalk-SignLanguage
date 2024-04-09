@@ -110,9 +110,10 @@ void NRF_SendData() {
   payload.adc_Pinky = Val_Pinky;
 
   payload.byteThumb = ThumbByte();
-  payload.byteMiddle = MiddleByte();
   payload.byteIndex = IndexByte();
+  payload.byteMiddle = MiddleByte();
   payload.byteRing = RingByte();
+  payload.bytePinky = PinkyByte();
 
   LEDon();
   radio.write(&payload, sizeof(PayloadData));

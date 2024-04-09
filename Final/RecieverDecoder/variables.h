@@ -14,6 +14,7 @@ int ThumbByte = 0;
 int IndexByte = 0;
 int MiddleByte = 0;
 int RingByte = 0;
+int PinkyByte = 0;
 
 #define pad_thumb 7
 #define pad_index 5
@@ -27,8 +28,8 @@ bool thumb_to_middle = false;
 bool thumb_to_ring = false;
 bool thumb_to_pinky = false;
 
-int UnitTolerance = 30;
-float GyroTolerance = 20.00;
+int UnitTolerance = 40;
+float GyroTolerance = 30.00;
 
 float KamoTalk_GyroX = 0.00;
 float KamoTalk_GyroY = 0.00;
