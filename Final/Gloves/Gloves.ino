@@ -111,6 +111,7 @@ void NRF_SendData() {
 
   payload.byteThumb = ThumbByte();
   payload.byteMiddle = MiddleByte();
+  payload.byteIndex = IndexByte();
 
   LEDon();
   radio.write(&payload, sizeof(PayloadData));

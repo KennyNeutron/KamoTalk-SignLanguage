@@ -9,6 +9,7 @@ void DecryptData() {
   KamoTalk_GyroY = payload.kt_GyroY;
   KamoTalk_GyroZ = payload.kt_GyroZ;
 
-  ThumbByte=payload.byteThumb;
-  MiddleByte=payload.byteMiddle;
+  ThumbByte = payload.byteThumb;
+  IndexByte = payload.byteIndex;
+  MiddleByte = payload.byteMiddle;
 }

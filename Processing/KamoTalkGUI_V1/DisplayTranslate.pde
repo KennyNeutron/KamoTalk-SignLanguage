@@ -59,51 +59,51 @@ void DisplayTranslate() {
   text(Sentence, 100, 120);
 
 
-  if (GestureCount>0) {      
+  if (GestureCount>0 || currentGesture=='@') {      
     fill(#00ff00);
     textSize(100);
     textAlign(CENTER, TOP);
     text(currentGesture, 1100, 190);
   }
 
-//  if (mySerialPort.available()>0) {
-//    MSerialPort_Val=mySerialPort.read();
-//    currentGesture=char(MSerialPort_Val);
-//    if (currentGesture==previousGesture) {
-//      GestureCount++;
-//      if (!AddedToSentence && GestureCount>=9) {
-//        if (currentGesture=='&') {
-//          Space=!Space;
-//          currentGesture=' ';
-//        }
-//        Sentence=Sentence+str(currentGesture);
-//        AddedToSentence=true;
-//      }
-//    } else {
-//      if (currentGesture>='A' && currentGesture<='Z') {
-//        previousGesture=currentGesture;
-//      } else if (currentGesture=='&') {
-//        previousGesture=currentGesture;
-//      } else if (currentGesture>='@' && !HasSpoken) {
-//        fill(#00ff00);
-//        textSize(20);
-//        textAlign(CENTER, TOP);
-//        text("TALK", 1100, 190);
-//        tts.speak(Sentence);
-//        HasSpoken=true;
-//      }
+  if (mySerialPort.available()>0) {
+    MSerialPort_Val=mySerialPort.read();
+    currentGesture=char(MSerialPort_Val);
+    if (currentGesture==previousGesture) {
+      GestureCount++;
+      if (!AddedToSentence && GestureCount>=6) {
+        if (currentGesture=='&') {
+          Space=!Space;
+          currentGesture=' ';
+        }
+        Sentence=Sentence+str(currentGesture);
+        AddedToSentence=true;
+      }
+    } else {
+      if (currentGesture>='A' && currentGesture<='Z') {
+        previousGesture=currentGesture;
+      } else if (currentGesture=='&') {
+        previousGesture=currentGesture;
+      } else if (currentGesture=='@' && !HasSpoken) {
+        fill(#00ff00);
+        textSize(20);
+        textAlign(CENTER, TOP);
+        text("TALK", 1100, 190);
+        tts.speak(Sentence);
+        HasSpoken=true;
+      }
 
 
-//      GestureCount=0;
-//      AddedToSentence=false;
-//    }
-//    NoSerialCount=0;
-//  } else {
-//    NoSerialCount++;
-//    if (NoSerialCount>=3) {
-//      HasSpoken=false;
-//    }
-//  }
+      GestureCount=0;
+      AddedToSentence=false;
+    }
+    NoSerialCount=0;
+  } else {
+    NoSerialCount++;
+    if (NoSerialCount>=5) {
+      HasSpoken=false;
+    }
+  }
 
   fill(#ff0000);
   textSize(20);

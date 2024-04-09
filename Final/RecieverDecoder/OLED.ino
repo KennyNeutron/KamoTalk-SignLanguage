@@ -13,6 +13,9 @@ void DrawData() {
   u8g.setPrintPos(0, 9);
   u8g.print("G: " + String(KamoTalk_GyroX) + "," + String(KamoTalk_GyroY) + "," + String(KamoTalk_GyroZ));
 
+  u8g.setPrintPos(0, 45);
+  u8g.print("I: " + String(IndexByte));
+
   u8g.drawStr(0, 21, ch_SensorVal);
 
   u8g.drawStr(0, 33, ch_PadByte);

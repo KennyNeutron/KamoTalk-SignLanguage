@@ -1,7 +1,7 @@
 //KamoTalk V1.0.0 //<>//
 
 import guru.ttslib.*;
-//import processing.serial.*;
+import processing.serial.*;
 
 PFont Font_Default_Regular;
 PFont Font_Default_Bold;
@@ -28,7 +28,7 @@ final int SETTINGS=0x0002;
 
 TTS tts;
 
-//Serial mySerialPort;
+Serial mySerialPort;
 int MSerialPort_Val;
 String str_ToSpeak="st";
 
@@ -46,8 +46,8 @@ void setup() {
   Font_Default_Regular=createFont("OpenSansRegular.ttf", 48);
   Font_Default_Bold=createFont("OpenSansBold.ttf", 48);
 
-  //String portName = Serial.list()[0];
-  //mySerialPort = new Serial(this, "/dev/ttyUSB0", 9600);
+  String portName = Serial.list()[0];
+  mySerialPort = new Serial(this, "COM4", 9600);
   ColorBG=color(#808080);
 
   background(ColorBG);
@@ -118,7 +118,7 @@ void serialPrintOnScreen(String StrToPrint) {
 
 
 void mousePressed() {
-  tts.speak("PRESSED ");
+  //tts.speak("PRESSED ");
   //tts.speak("The quick brown fox jumps over the lazy dog");
   if (ButtonHovered(TRANSLATE) && currentScreen==0) {
     //tts.speak("TRANSLATE");

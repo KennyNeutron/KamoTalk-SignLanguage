@@ -11,6 +11,7 @@ int prev_ValRing = 0;
 int prev_ValPinky = 0;
 
 int ThumbByte = 0;
+int IndexByte = 0;
 int MiddleByte = 0;
 
 #define pad_thumb 7
@@ -26,7 +27,7 @@ bool thumb_to_ring = false;
 bool thumb_to_pinky = false;
 
 int UnitTolerance = 80;
-float GyroTolerance = 20.00;
+float GyroTolerance = 30.00;
 
 float KamoTalk_GyroX = 0.00;
 float KamoTalk_GyroY = 0.00;

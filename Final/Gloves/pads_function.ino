@@ -16,11 +16,37 @@ uint8_t ThumbByte() {
   bitWrite(Thumb_byte, 3, digitalRead(pad_pinky));
 
 
-//  Serial.print("Thumb:");
-//  Serial.println(Thumb_byte, BIN);
+  //  Serial.print("Thumb:");
+  //  Serial.println(Thumb_byte, BIN);
 
   DDRD = B00000010;
   return Thumb_byte;
+}
+
+uint8_t IndexByte() {
+  pinMode(pad_thumb, INPUT_PULLUP);
+  pinMode(pad_index, OUTPUT);
+  pinMode(pad_middle, INPUT_PULLUP);
+  pinMode(pad_ring, INPUT_PULLUP);
+  pinMode(pad_pinky, INPUT_PULLUP);
+
+  digitalWrite(pad_index, 0);
+  delayMicroseconds(100);
+
+  uint8_t Index_byte = 0xff;
+
+  bitWrite(Index_byte, 0, digitalRead(pad_thumb));
+  bitWrite(Index_byte, 1, digitalRead(pad_middle));
+  bitWrite(Index_byte, 2, digitalRead(pad_ring));
+  bitWrite(Index_byte, 3, digitalRead(pad_pinky));
+
+
+  //  Serial.print("Index:");
+  //  Serial.println(Index_byte, BIN);
+
+  DDRD = B00000010;
+
+  return Index_byte;
 }
 
 uint8_t MiddleByte() {
@@ -41,8 +67,8 @@ uint8_t MiddleByte() {
   bitWrite(Middle_byte, 3, digitalRead(pad_pinky));
 
 
-//  Serial.print("Middle:");
-//  Serial.println(Middle_byte, BIN);
+  //  Serial.print("Middle:");
+  //  Serial.println(Middle_byte, BIN);
 
   DDRD = B00000010;
 
