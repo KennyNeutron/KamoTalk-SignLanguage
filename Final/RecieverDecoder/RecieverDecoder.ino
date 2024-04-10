@@ -146,14 +146,15 @@ void loop() {
     Serial_LastMillis = millis();
     SerialVal = Serial.read();
     if (SerialVal == '<') {
+      LEDblueON();
       while (Serial.available() == 0) {
         if (millis() - Serial_LastMillis >= 3000) {
           goto SerialExit;
         }
       }
       SignToSave   = Serial.read() - 48;
-      Serial.print("sign to save:");
-      Serial.println(SignToSave);
+      //      Serial.print("sign to save:");
+      //      Serial.println(SignToSave);
       while (Serial.available() == 0) {
         if (millis() - Serial_LastMillis >= 3000) {
           goto SerialExit;
@@ -163,6 +164,27 @@ void loop() {
       if (SerialVal == '>') {
         saveEEPROM(SignToSave, 1, KamoTalk_GyroX, KamoTalk_GyroY, KamoTalk_GyroZ, Val_Thumb, Val_Index, Val_Middle, Val_Ring, Val_Pinky, ThumbByte, IndexByte, MiddleByte, RingByte, PinkyByte);
       }
+      LEDblueOFF();
+    } else if (SerialVal == '{') {
+      LEDredON();
+      while (Serial.available() == 0) {
+        if (millis() - Serial_LastMillis >= 3000) {
+          goto SerialExit;
+        }
+      }
+      SignToSave   = Serial.read() - 48;
+      //      Serial.print("sign to save:");
+      //      Serial.println(SignToSave);
+      while (Serial.available() == 0) {
+        if (millis() - Serial_LastMillis >= 3000) {
+          goto SerialExit;
+        }
+      }
+      SerialVal = Serial.read();
+      if (SerialVal == '}') {
+        saveEEPROM(SignToSave, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      }
+      LEDredOFF();
     }
   }
 SerialExit:

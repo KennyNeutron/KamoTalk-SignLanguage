@@ -22,7 +22,7 @@ void Correspond() {
 
 
   LetterScore = gesture('B', 80, 50, 80, 150, 250, 440, 230, 300 , 0, 0, 0, 0, 0);
-  if (LetterScore >= 65) {
+  if (LetterScore >= 59) {
     if (LetterScore >= prev_LetterScore) {
       NowSigning = 'B';
       prev_LetterScore = LetterScore;

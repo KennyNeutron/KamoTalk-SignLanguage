@@ -118,7 +118,6 @@ void DisplayAddgesture_setup() {
   currentToSave="";
   //println("init");
   currentlyDisplaying=savedHandsignWordDisplay[currentSlot];
-
 }
 
 
@@ -167,8 +166,13 @@ void DisplayAddgesture_ButtonFunctions() {
     saveTable(handsignData, "handsign/handsign.csv");
     println("deleted!");
 
-    DisplayAddgesture_init=false;
+
     LoadSavedFile();
+
+    String sToWrite="{"+ch_currentSlot+"}";
+    println("{"+ch_currentSlot+"}");
+    mySerialPort.write(sToWrite); 
+    DisplayAddgesture_init=false;
   }
 
   //Save Button

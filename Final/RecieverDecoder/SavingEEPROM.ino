@@ -3,7 +3,6 @@
 void saveEEPROM(uint8_t toSave, uint8_t command, float gyroX, float gyroY, float gyroZ, uint16_t fThumb, uint16_t fIndex, uint16_t fMiddle, uint16_t fRing, uint16_t fPinky, uint8_t pThumb, uint8_t pIndex, uint8_t pMiddle, uint8_t pRing, uint8_t pPinky) {
   int addressStart = 1;
   addressStart = 1 + (28 * (toSave - 1));
-  LEDredON();
   EEPROM.write(addressStart, command);
   EEPROM.put(addressStart + 1, gyroX);
   EEPROM.put(addressStart + 5, gyroY);
@@ -22,7 +21,7 @@ void saveEEPROM(uint8_t toSave, uint8_t command, float gyroX, float gyroY, float
   EEPROM.write(addressStart + 27, pPinky);
 
   delay(100);
-  LEDredOFF();
+
 }
 
 void getEEPROM(uint8_t slot) {
