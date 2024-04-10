@@ -15,6 +15,7 @@ color Color_CYAN= color(0, 255, 255);
 color Color_MAGENTA= color(255, 0, 255);
 color Color_YELLOW= color(255, 255, 0);
 color Color_ORANGE=color(255, 128, 0);
+color Color_GRAY=color(128, 128, 128);
 
 color ColorBG=color(#808080);
 
@@ -40,7 +41,6 @@ int currentScreen=0x0000;
 String [] savedHandsignWord = new String[31];
 String [] savedHandsignWordDisplay = new String[31];
 
-
 Table handsignData;
 
 void setup() {
@@ -60,7 +60,7 @@ void setup() {
 
   currentScreen=0x0000;
 
-  handsignData = loadTable("handsign.csv", "header");
+
   LoadSavedFile();
 }
 
@@ -120,6 +120,7 @@ void mousePressed() {
     //tts.speak("ADD GESTURE");
     DisplayHome_init=false;
     currentScreen=0x2000;
+    ch_currentSlot='1';
   } else if (ButtonHovered(SETTINGS) && currentScreen==0) {
     //tts.speak("SETTINGS");
     DisplayHome_init=false;
@@ -164,17 +165,48 @@ void keyPressed() {
       }
     }
   }
+
+
+  if (currentScreen==0x2000) {
+    println("f:"+int(key));
+    if (key>='!' && key<='z' && currentlyDisplaying.length()<250) {
+      currentToSave=currentToSave+key;
+      if (currentlyDisplaying.length()==65 || currentlyDisplaying.length()==130 || currentlyDisplaying.length()==195) {
+        currentlyDisplaying=currentlyDisplaying+"\n"+key;
+      } else {
+        currentlyDisplaying=currentlyDisplaying+key;
+        println("word:"+currentlyDisplaying);
+      }
+    } else if (key==BACKSPACE) {
+      if (currentlyDisplaying.length()>0) {
+        currentlyDisplaying=currentlyDisplaying.substring(0, currentlyDisplaying.length()-1);
+        currentToSave=currentToSave.substring(0, currentToSave.length()-1);
+      }
+    } else if (key==32) {
+      if (currentlyDisplaying.length()==65 || currentlyDisplaying.length()==130 || currentlyDisplaying.length()==195) {
+        currentlyDisplaying=currentlyDisplaying+"\n"+key;
+      } else {
+        currentlyDisplaying=currentlyDisplaying+ " ";
+      }
+      currentToSave=currentToSave+" ";
+    }
+  }
 }
 
 
 void LoadSavedFile() {
+  for (int i=0; i<=30; i++) {
+    savedHandsignWord[i]="";
+    savedHandsignWordDisplay[i]="";
+  }
+
+
+  handsignData = loadTable("handsign/handsign.csv", "header");
   int a=1;
   for (TableRow row : handsignData.rows()) {
-
     int id = row.getInt("id");
     savedHandsignWord[a] = row.getString("word");
     savedHandsignWordDisplay[a] = row.getString("display");
-
     a++;
   }
 }

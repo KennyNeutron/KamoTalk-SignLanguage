@@ -47,3 +47,22 @@ bool SignPrinted = false;
 
 String WordToSay = "";
 bool HasSpoken = true;
+
+
+//EEPROM
+uint8_t saved_command=-0;
+float saved_Gx = 0.00;
+float saved_Gy=0.00;
+float saved_Gz=0.00;
+
+uint16_t saved_fThumb=0;
+uint16_t saved_fIndex=0;
+uint16_t saved_fMiddle=0;
+uint16_t saved_fRing=0;
+uint16_t saved_fPinky=0;
+
+uint8_t saved_pThumb=0;
+uint8_t saved_pIndex=0;
+uint8_t saved_pMiddle=0;
+uint8_t saved_pRing=0;
+uint8_t saved_pPinky=0;

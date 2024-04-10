@@ -2,7 +2,13 @@
 boolean DisplayAddgesture_init=false;
 int currentSlot=1;
 
+String currentlyDisplaying="";
+String currentToSave="";
+boolean SaveAllow=false;
 
+int serialDetect=0;
+
+char ch_currentSlot='1';
 
 void DisplayAddgesture() {
   if (!DisplayAddgesture_init) {
@@ -32,16 +38,16 @@ void DisplayAddgesture() {
   textSize(30);
   text("SLOT#"+(currentSlot), 380, 100);
 
-
-
   fill(Color_GREEN);
   textFont(Font_Default_Regular, 45);
   textSize(20);
-  if (savedHandsignWordDisplay[currentSlot].length()==0) {
-    text("NONE", 205, 150);
+  if (currentlyDisplaying.length()==0) {
+    text("NONE", 230, 170);
   } else {
-    text(savedHandsignWordDisplay[currentSlot], 205, 150);
+    text(currentlyDisplaying, 230, 170);
   }
+
+  text(currentlyDisplaying.length()+"/250", 950, 120);
 
   if (mouseX>25 && mouseX<100 && mouseY>620 && mouseY<645) {
     CreateButton_XSmall(25, 620, Color_ORANGE, Color_BLACK, "TALK", Font_Default_Bold, Color_BLACK, 15);
@@ -76,24 +82,43 @@ void DisplayAddgesture() {
     CreateButton_Small(430, 580, Color_RED, Color_BLACK, "DELETE", Font_Default_Bold, Color_BLACK, 25);
   }
 
-  if (mouseX>620 && mouseX<770 && mouseY>580 && mouseY<630) {
-    CreateButton_Small(620, 580, Color_ORANGE, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 25);
+
+  if (!SaveAllow) {
+    CreateButton_Small(620, 580, Color_GRAY, Color_BLACK, "Duplicate", Font_Default_Bold, Color_BLACK, 25);
   } else {
-    CreateButton_Small(620, 580, Color_GREEN, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 25);
+    if (mouseX>620 && mouseX<770 && mouseY>580 && mouseY<630) {
+      CreateButton_Small(620, 580, Color_ORANGE, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 25);
+    } else {
+      CreateButton_Small(620, 580, Color_GREEN, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 25);
+    }
+  }
+
+
+
+  //println(mySerialPort.available());
+  if (mySerialPort.available()==0) {
+    serialDetect++;
+    if (serialDetect>=50) {
+      SaveAllow=true;
+      serialDetect=0;
+    }
+  } else {
+    serialDetect=0;
+    MSerialPort_Val=mySerialPort.read();
+    SaveAllow=false;
   }
 }
+
 
 
 void DisplayAddgesture_setup() {
   background(ColorBG);
   DisplayAddgesture_init=true;
-  //savedHandsignWordDisplay[1]="Hey, how have you been? I've been meaning to catch up with you. \nWhat's new in your life lately?";
-  //savedHandsignWordDisplay[2]="Good day! I hope you're doing well. How's your day been shaping up?";
+  currentlyDisplaying="";
+  currentToSave="";
+  //println("init");
+  currentlyDisplaying=savedHandsignWordDisplay[currentSlot];
 
-  //savedHandsignWord[1]="Hey, how have you been? I've been meaning to catch up with you. What's new in your life lately?";
-  //savedHandsignWord[2]="Good day! I hope you're doing well. How's your day been shaping up?";
-
-  ///savedHandsignWordDisplay[2]="Hey there, stranger! It feels like it's been ages since we last talked. How have you been keeping yourself busy?";
 }
 
 
@@ -101,29 +126,64 @@ void DisplayAddgesture_ButtonFunctions() {
   //Back Button
   if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
     currentScreen=0x0000;
-    DisplaySettings_init=false;
+    DisplayAddgesture_init=false;
   }
 
   //Next Button
   if (mouseX>1020 && mouseX<1170 && mouseY>300 && mouseY<350) {
     if (currentSlot>=30) {
       currentSlot=1;
+      ch_currentSlot='1';
     } else {
       currentSlot++;
+      ch_currentSlot++;
     }
+    DisplayAddgesture_init=false;
   }
 
   //Previous Button
   if (mouseX>30 && mouseX<180 && mouseY>300 && mouseY<350) {
     if (currentSlot<=1) {
       currentSlot=30;
+      ch_currentSlot='N';
     } else {
       currentSlot--;
+      ch_currentSlot--;
     }
+    DisplayAddgesture_init=false;
   }
 
   //Talk Button
   if (mouseX>25 && mouseX<100 && mouseY>620 && mouseY<645) {
-        tts.speak(savedHandsignWordDisplay[currentSlot]);
+    tts.speak(savedHandsignWordDisplay[currentSlot]);
+  }
+
+
+  //DeleteButton
+  if (mouseX>430 && mouseX<580 && mouseY>580 && mouseY<630) {
+
+    handsignData.setString(currentSlot-1, "word", "");
+    handsignData.setString(currentSlot-1, "display", "");
+    saveTable(handsignData, "handsign/handsign.csv");
+    println("deleted!");
+
+    DisplayAddgesture_init=false;
+    LoadSavedFile();
+  }
+
+  //Save Button
+  if (mouseX>620 && mouseX<770 && mouseY>580 && mouseY<630) {
+    handsignData.setString(currentSlot-1, "word", currentToSave);
+    handsignData.setString(currentSlot-1, "display", currentlyDisplaying);
+    saveTable(handsignData, "handsign/handsign.csv");
+    println("saved!");
+
+
+    LoadSavedFile();
+    String sToWrite="<"+ch_currentSlot+">";
+    println("<"+ch_currentSlot+">");
+    mySerialPort.write(sToWrite); 
+
+    DisplayAddgesture_init=false;
   }
 }

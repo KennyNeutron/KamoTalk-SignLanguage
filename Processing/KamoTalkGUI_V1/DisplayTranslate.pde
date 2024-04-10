@@ -63,7 +63,11 @@ void DisplayTranslate() {
     fill(#00ff00);
     textSize(100);
     textAlign(CENTER, TOP);
-    text(currentGesture, 1100, 190);
+    if (currentGesture>='[' && currentGesture<='z') {
+      text("%", 1100, 190);
+    } else {
+      text(currentGesture, 1100, 190);
+    }
   }
 
   if (mySerialPort.available()>0) {
@@ -76,11 +80,19 @@ void DisplayTranslate() {
           Space=!Space;
           currentGesture=' ';
         }
-        Sentence=Sentence+str(currentGesture);
-        AddedToSentence=true;
+        if (currentGesture>='[' &&currentGesture<='z' && !HasSpoken) {
+          Sentence=savedHandsignWordDisplay[currentGesture-90];
+          println("speak:"+str(currentGesture-90));
+          tts.speak(savedHandsignWord[currentGesture-90]);
+          HasSpoken=true;
+          AddedToSentence=true;
+        } else {
+          Sentence=Sentence+str(currentGesture);
+          AddedToSentence=true;
+        }
       }
     } else {
-      if (currentGesture>='A' && currentGesture<='Z') {
+      if (currentGesture>='A' && currentGesture<='z') {
         previousGesture=currentGesture;
       } else if (currentGesture=='&') {
         previousGesture=currentGesture;
@@ -92,16 +104,15 @@ void DisplayTranslate() {
         tts.speak(Sentence);
         HasSpoken=true;
       }
-
-
       GestureCount=0;
       AddedToSentence=false;
     }
     NoSerialCount=0;
   } else {
     NoSerialCount++;
-    if (NoSerialCount>=5) {
+    if (NoSerialCount>=15) {
       HasSpoken=false;
+      GestureCount=0;
     }
   }
 
@@ -146,6 +157,7 @@ void DisplayTranslate_setup() {
   HasSpoken=false;
 
   Space=false;
+  LoadSavedFile();
 }
 
 

@@ -1,5 +1,6 @@
 #include <SPI.h>
 #include <Wire.h>
+#include <EEPROM.h>
 #include <nRF24L01.h>
 #include <RF24.h>
 #include "DataStructure.h"
@@ -15,16 +16,25 @@ RF24 radio(9, 10); // CE, CSN
 
 const byte address[6] = "PT001";
 
-#define LEDgreen 3
+
 #define LEDred 2
+#define LEDgreen 3
+#define LEDblue 4
 
 uint32_t last_millis = 0;
 
+uint8_t SerialVal = 0;
+uint8_t SignToSave = 0;
+uint32_t Serial_LastMillis = 0;
+
+
 void setup() {
-  pinMode(LEDgreen, OUTPUT);
   pinMode(LEDred, OUTPUT);
-  digitalWrite(LEDred, 0);
+  pinMode(LEDgreen, OUTPUT);
+  pinMode(LEDblue, OUTPUT);
+  LEDredOFF();
   LEDgreenOFF();
+  LEDblueOFF();
   Serial.begin(9600);
   if (!radio.begin()) {
     Serial.println("NRF24L01 Hardware Didn't Respond");
@@ -52,6 +62,23 @@ void setup() {
   //  Serial.write('<');
   //  Serial.print(str_sample);
   //  Serial.write('>');
+
+  //  Serial.println("EEPROM 1:" + String(EEPROM.read(1)));
+  //  Serial.println("EEPROM 2:" + String(EEPROM.get(2, saved_Gx)));
+  //  Serial.println("EEPROM 6:" + String(EEPROM.get(6, saved_Gy)));
+  //  Serial.println("EEPROM 10:" + String(EEPROM.get(10, saved_Gz)));
+  //  Serial.println("EEPROM 14:" + String(EEPROM.read(14)));
+  //  Serial.println("EEPROM 16:" + String(EEPROM.read(16)));
+  //  Serial.println("EEPROM 18:" + String(EEPROM.read(18)));
+  //  Serial.println("EEPROM 20:" + String(EEPROM.read(20)));
+  //  Serial.println("EEPROM 22:" + String(EEPROM.read(22)));
+  //
+  //  Serial.println("EEPROM 24:" + String(EEPROM.read(24)));
+  //  Serial.println("EEPROM 25:" + String(EEPROM.read(25)));
+  //  Serial.println("EEPROM 26:" + String(EEPROM.read(26)));
+  //  Serial.println("EEPROM 27:" + String(EEPROM.read(27)));
+  //  Serial.println("EEPROM 28:" + String(EEPROM.read(28)));
+
 
 }
 
@@ -97,8 +124,10 @@ void loop() {
   //  }
 
 
+  if (NowSigning != ' ') {
+    Serial.print(NowSigning);
+  }
 
-  Serial.print(NowSigning);
 
 
 
@@ -113,242 +142,36 @@ void loop() {
     SignPrinted = false;
   }
 
+  if (Serial.available() > 0) {
+    Serial_LastMillis = millis();
+    SerialVal = Serial.read();
+    if (SerialVal == '<') {
+      while (Serial.available() == 0) {
+        if (millis() - Serial_LastMillis >= 3000) {
+          goto SerialExit;
+        }
+      }
+      SignToSave   = Serial.read() - 48;
+      Serial.print("sign to save:");
+      Serial.println(SignToSave);
+      while (Serial.available() == 0) {
+        if (millis() - Serial_LastMillis >= 3000) {
+          goto SerialExit;
+        }
+      }
+      SerialVal = Serial.read();
+      if (SerialVal == '>') {
+        saveEEPROM(SignToSave, 1, KamoTalk_GyroX, KamoTalk_GyroY, KamoTalk_GyroZ, Val_Thumb, Val_Index, Val_Middle, Val_Ring, Val_Pinky, ThumbByte, IndexByte, MiddleByte, RingByte, PinkyByte);
+      }
+    }
+  }
+SerialExit:
+  delayMicroseconds(10);
+
 
 }
 
 
-void Correspond() {
-  //  if ( TestGesture(250, 320, 285, 130, 350, UnitTolerance)) {
-  //    Serial.println("Rock and Roll");
-  //    delay(2000);
-  //  }
-
-
-  //  if (TestGesture(290,  200,  475,  135, 220, UnitTolerance)) {
-  //    Serial.println("Pakyu Bitch");
-  //    delay(2000);
-  //  }
-
-  byte LetterScore = 0;
-  byte prev_LetterScore = 0;
-
-  LetterScore = gesture('A', 90, 90, 80, 155, 80, 180, 100, 120, 0, 14, 14, 14, 14);
-
-  if ( LetterScore >= 59 ) {
-    NowSigning = 'A';
-    prev_LetterScore = LetterScore;
-  }
-
-
-  LetterScore = gesture('B', 80, 50, 80, 150, 250, 440, 230, 300 , 0, 0, 0, 0, 0);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'B';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-
-  LetterScore = gesture('C', 70, 350, 100, 250, 140, 300, 120, 180, 0, 14, 14, 14, 14);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'C';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('D', 60, 350, 100, 150, 230, 260, 115, 160, 14, 0, 13, 13, 13);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'D';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('E',  80, 30, 80, 165, 112, 230, 100, 150, 15, 15, 15, 15, 15);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'E';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('F', 70, 350, 90, 145, 100, 450, 150, 300,  1, 1, 0, 0, 0);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'F';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('G', 150, 260, 180, 160, 115, 220, 100, 140, 1, 1, 12, 12, 12);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'G';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('H', 70, 270, 170, 170, 230, 430, 125, 150,  0, 2, 2, 8, 8);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'H';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('I', 90, 100, 75, 140, 100, 220, 105, 300, 7, 7, 7, 7, 0);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'I';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('J',  130, 250, 160, 140, 100, 220, 105, 300, 7, 7, 7, 7, 0);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'J';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('K', 90, 270, 150, 170, 225, 340, 120, 140, 0, 0, 0, 8, 8);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'K';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('L', 80, 50, 80, 215, 160, 200, 105, 142, 0, 0, 12, 12, 12);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'L';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('M', 340, 25, 315, 140, 110, 210, 115, 160, 0, 6, 6, 6, 0);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'M';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('N', 350, 10, 300, 170, 110, 235, 120, 165, 0, 2, 2, 8, 8);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'N';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('O', 5, 350, 170, 150, 110, 200, 100, 155, 15, 15, 15, 15, 15 );
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'O';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('P', 350, 350, 250, 230, 290, 450, 130, 240, 0, 2, 2, 0, 0 );
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'P';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('Q', 350, 350, 250, 155, 130, 215, 100, 135, 1, 1, 12, 12, 12 );
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'Q';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('R', 80, 15, 90, 110, 220, 260, 100, 150, 0, 0, 0, 8, 8);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'R';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('S', 350, 10, 300, 250, 110, 250, 110, 140, 0, 14, 14, 14, 14);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'S';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('T', 80, 15, 90, 175, 1200, 200, 100, 130, 0, 2, 2, 8, 8);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'T';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('U', 70, 350, 100, 120, 270, 340, 110, 150, 12, 2, 2, 9, 9);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'U';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('V', 80, 15, 90, 110, 220, 260, 100, 150, 12, 0, 0, 9, 9);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'V';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('W', 80, 30, 80, 160, 260, 365, 130, 150, 8, 0, 0, 0, 1);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'W';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('X', 80, 50, 80, 215, 160, 200, 105, 142, 1, 1, 12, 12, 12);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'X';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('Y', 100, 100, 70, 155, 100, 210, 105, 170, 0, 6, 6, 6, 0);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'Y';
-      prev_LetterScore = LetterScore;
-    }
-  }
-
-  LetterScore = gesture('Z', 20, 300, 180, 123, 200, 180, 100, 145, 0, 0, 12, 12, 12);
-  if (LetterScore >= 59) {
-    if (LetterScore >= prev_LetterScore) {
-      NowSigning = 'Z';
-      prev_LetterScore = LetterScore;
-    }
-  }
-  
-  signing();
-  if (prev_LetterScore == 0) {
-    NowSigning = ' ';
-    SignPrinted = false;
-  }
-
-
-}
 
 void signing() {
   if (NowSigning == Prev_NowSigning) {
@@ -391,4 +214,20 @@ void LEDgreenON() {
 
 void LEDgreenOFF() {
   digitalWrite(LEDgreen, 0);
+}
+
+void LEDredON() {
+  digitalWrite(LEDred, 1);
+}
+
+void LEDredOFF() {
+  digitalWrite(LEDred, 0);
+}
+
+void LEDblueON() {
+  digitalWrite(LEDblue, 1);
+}
+
+void LEDblueOFF() {
+  digitalWrite(LEDblue, 0);
 }

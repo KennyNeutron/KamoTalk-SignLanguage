@@ -18,7 +18,10 @@ void DrawData() {
 
   u8g.drawStr(0, 33, ch_PadByte);
 
-  u8g.setFont(u8g_font_helvB14);
+  u8g.setPrintPos(0, 45);
+  u8g.print("TS: " + String(SignToSave));
+
+  // u8g.setFont(u8g_font_helvB14);
 
   char ch_NowSigning[2] = { ' ' };
   if (SignPrinted) {
