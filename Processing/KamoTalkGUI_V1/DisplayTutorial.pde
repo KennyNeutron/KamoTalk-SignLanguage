@@ -38,11 +38,16 @@ void DisplayTutorial() {
     CreateButton_Small(30, 300, Color_CYAN, Color_BLACK, "PREVIOUS", Font_Default_Bold, Color_BLACK, 25);
   }
 
-
-  img_name="letter"+CurrentLetter+".jpg";
+  if (CurrentLetter>='A' && CurrentLetter<='Z') {
+    img_name="letter"+CurrentLetter+".jpg";
+  } else if (CurrentLetter>='0' && CurrentLetter<='9') {
+    img_name="number"+CurrentLetter+".jpg";
+  } else {
+    img_name="letterA.jpg";
+  }
 
   imageMode(CENTER);
-  image(loadImage(img_name), width/2, 300);
+  image(loadImage(img_name), width/2, 350);
 }
 
 
@@ -50,4 +55,36 @@ void DisplayTutorial_setup() {
   CurrentLetter='A';
   background(ColorBG);
   DisplayTutorial_init=true;
+}
+
+
+
+void DisplayTutorial_ButtonFuntions() {
+  //BackButton
+  if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
+    currentScreen=0x1000;
+    DisplayTutorial_init=false;
+  }
+
+  //Next Button
+  if (mouseX>1020 && mouseX<1170 && mouseY>300 && mouseY<350) {
+    if (CurrentLetter=='Z') {
+      CurrentLetter='0';
+    } else if (CurrentLetter=='9') {
+      CurrentLetter='A';
+    } else {
+      CurrentLetter++;
+    }
+  }
+
+  //Previous Button
+  if (mouseX>30 && mouseX<180 && mouseY>300 && mouseY<350) {
+    if (CurrentLetter=='A') {
+      CurrentLetter='9';
+    } else if (      CurrentLetter=='0') {
+      CurrentLetter='Z';
+    } else {
+      CurrentLetter--;
+    }
+  }
 }

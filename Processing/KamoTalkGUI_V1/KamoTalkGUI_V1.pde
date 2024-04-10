@@ -14,6 +14,7 @@ color Color_WHITE= color(255, 255, 255);
 color Color_CYAN= color(0, 255, 255);
 color Color_MAGENTA= color(255, 0, 255);
 color Color_YELLOW= color(255, 255, 0);
+color Color_ORANGE=color(255, 128, 0);
 
 color ColorBG=color(#808080);
 
@@ -36,6 +37,11 @@ boolean str_ToSpeak_printed=false;
 
 int currentScreen=0x0000;
 
+String [] savedHandsignWord = new String[31];
+String [] savedHandsignWordDisplay = new String[31];
+
+
+Table handsignData;
 
 void setup() {
   size(1200, 650);
@@ -53,6 +59,9 @@ void setup() {
   background(ColorBG);
 
   currentScreen=0x0000;
+
+  handsignData = loadTable("handsign.csv", "header");
+  LoadSavedFile();
 }
 
 
@@ -68,6 +77,9 @@ void draw() {
   case 0x1100:
     DisplayTutorial();
     break;
+  case 0x2000:
+    DisplayAddgesture();
+    break;
   case 0x3000:
     DisplaySettings();
     break;
@@ -76,26 +88,6 @@ void draw() {
     break;
   }
 
-
-
-  //if (mySerialPort.available()>0) {
-  //  str_ToSpeak_printed=false;
-  //  str_ToSpeak="";
-  //  MSerialPort_Val=mySerialPort.read();
-  //  //println(str(MSerialPort_Val));
-  //  //serialPrintOnScreen(str(MSerialPort_Val));
-  //  if (MSerialPort_Val=='<') {
-  //    while (MSerialPort_Val!='>') {
-  //      while (mySerialPort.available()==0) ;
-  //      MSerialPort_Val=mySerialPort.read();
-  //      str_ToSpeak=str_ToSpeak+char(MSerialPort_Val);
-  //    }
-  //    if (!str_ToSpeak_printed) {
-  //      str_ToSpeak_printed=true;
-  //      tts.speak(str_ToSpeak);
-  //    }
-  //  }
-  //}
 
   fill(#000000);
   strokeWeight(0);
@@ -126,6 +118,8 @@ void mousePressed() {
     currentScreen=0x1000;
   } else if (ButtonHovered(ADD_GESTURE) && currentScreen==0) {
     //tts.speak("ADD GESTURE");
+    DisplayHome_init=false;
+    currentScreen=0x2000;
   } else if (ButtonHovered(SETTINGS) && currentScreen==0) {
     //tts.speak("SETTINGS");
     DisplayHome_init=false;
@@ -134,55 +128,25 @@ void mousePressed() {
     //tts.speak("NOTHING");
   }
 
-  //Settings Screen
-  if (currentScreen==0x3000) {
-    //BackButton
-    if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
-      currentScreen=0x0000;
-      DisplaySettings_init=false;
-    }
-  }
-
   //Translate Screen
   if (currentScreen==0x1000) {
-    //BackButton
-    if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
-      currentScreen=0x0000;
-      DisplayTranslate_init=false;
-    }
-
-    //Tutorial
-    if (mouseX>=10 && mouseX<=110 && mouseY>=620 && mouseY<=650) {
-      currentScreen=0x1100;
-      DisplayTranslate_init=false;
-    }
+    DisplayTranslate_ButtonFunctions();
   }
 
   //Tutorial Screen
   if (currentScreen==0x1100) {
+    DisplayTutorial_ButtonFuntions();
+  }
+
+  //Add HandSign Screen
+  if (currentScreen==0x2000) {
+    DisplayAddgesture_ButtonFunctions();
+  }
+
+  //Settings Screen
+  if (currentScreen==0x3000) {
     //BackButton
-    if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
-      currentScreen=0x1000;
-      DisplayTutorial_init=false;
-    }
-
-    //Next Button
-    if (mouseX>1020 && mouseX<1170 && mouseY>300 && mouseY<350) {
-      if (CurrentLetter=='Z') {
-        CurrentLetter='A';
-      } else {
-        CurrentLetter++;
-      }
-    }
-
-    //Previous Button
-    if (mouseX>30 && mouseX<180 && mouseY>300 && mouseY<350) {
-      if (CurrentLetter=='A') {
-        CurrentLetter='Z';
-      } else {
-        CurrentLetter--;
-      }
-    }
+    DisplaySettings_ButtonFunctions();
   }
 }
 
@@ -199,5 +163,18 @@ void keyPressed() {
         pwEntered=pwEntered+key;
       }
     }
+  }
+}
+
+
+void LoadSavedFile() {
+  int a=1;
+  for (TableRow row : handsignData.rows()) {
+
+    int id = row.getInt("id");
+    savedHandsignWord[a] = row.getString("word");
+    savedHandsignWordDisplay[a] = row.getString("display");
+
+    a++;
   }
 }

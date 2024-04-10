@@ -147,3 +147,18 @@ void DisplayTranslate_setup() {
 
   Space=false;
 }
+
+
+void DisplayTranslate_ButtonFunctions() {
+  //BackButton
+  if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
+    currentScreen=0x0000;
+    DisplayTranslate_init=false;
+  }
+
+  //Tutorial
+  if (mouseX>=10 && mouseX<=110 && mouseY>=620 && mouseY<=650) {
+    currentScreen=0x1100;
+    DisplayTranslate_init=false;
+  }
+}

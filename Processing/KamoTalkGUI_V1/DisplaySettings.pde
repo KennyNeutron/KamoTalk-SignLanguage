@@ -35,6 +35,7 @@ void DisplaySettings() {
   textAlign(CENTER, CENTER);
   text("ENTER GLOVES PINCODE", width/2, 130);
 
+
   textSize(30);
   fill(Color_CYAN);
   text(pwEntered, width/2, 170);
@@ -44,13 +45,13 @@ void DisplaySettings() {
 void DisplaySettings_setup() {
   background(ColorBG);
 
-
-
-
-
   DisplaySettings_init=true;
 }
 
 
-void PrintButton_back() {
+void DisplaySettings_ButtonFunctions() {
+  if (mouseX>25 && mouseX<175 && mouseY>25 && mouseY<75 ) {
+    currentScreen=0x0000;
+    DisplaySettings_init=false;
+  }
 }

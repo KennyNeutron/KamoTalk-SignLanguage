@@ -1,5 +1,18 @@
 //GUI Manager
 
+void CreateButton_XSmall(int cursorX, int cursorY, color colorBG, color colorSTK, String btn_text, PFont FontTXT, color colorTXT, int txtSIZE) {
+  fill(colorBG);
+  stroke(colorSTK);
+  strokeWeight(1);
+  rect(cursorX, cursorY, 75, 25, 6);
+  fill(colorTXT);
+  noStroke();
+  textFont(FontTXT);
+  textSize(txtSIZE);
+  textAlign(CENTER, CENTER);
+  text(btn_text, cursorX+38, cursorY+12);
+}
+
 void CreateButton_Small(int cursorX, int cursorY, color colorBG, color colorSTK, String btn_text, PFont FontTXT, color colorTXT, int txtSIZE) {
   fill(colorBG);
   stroke(colorSTK);
@@ -54,9 +67,9 @@ void PrintButton(int buttonAddress) {
 
   case ADD_GESTURE:
     if (!ButtonHovered(ADD_GESTURE)) {
-      CreateButton_Large((width/2)-300, 300, Color_GREEN, Color_BLACK, "ADD GESTURE", Font_Default_Bold, Color_BLACK, 40);
+      CreateButton_Large((width/2)-300, 300, Color_GREEN, Color_BLACK, "ADD HANDSIGN", Font_Default_Bold, Color_BLACK, 40);
     } else {
-      CreateButton_Large((width/2)-300, 300, Color_YELLOW, Color_BLACK, "ADD GESTURE", Font_Default_Bold, Color_BLACK, 40);
+      CreateButton_Large((width/2)-300, 300, Color_YELLOW, Color_BLACK, "ADD HANDSIGN", Font_Default_Bold, Color_BLACK, 40);
     }
 
   case SETTINGS:
@@ -93,7 +106,7 @@ boolean ButtonHovered(int buttonAddress) {
     } else {
       return false;
     }
-}
+  }
 
   return false;
 }
