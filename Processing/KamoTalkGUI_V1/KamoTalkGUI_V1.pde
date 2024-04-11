@@ -61,6 +61,10 @@ void setup() {
 
   currentScreen=0x0000;
 
+  handsignData = loadTable("handsign/handsign.csv", "header");
+
+  handsignData.setString(1, "pw", "8899");
+  saveTable(handsignData, "handsign/handsign.csv");
 
   LoadSavedFile();
 }
@@ -202,7 +206,6 @@ void LoadSavedFile() {
   }
 
 
-  handsignData = loadTable("handsign/handsign.csv", "header");
   int a=1;
   for (TableRow row : handsignData.rows()) {
     int id = row.getInt("id");
