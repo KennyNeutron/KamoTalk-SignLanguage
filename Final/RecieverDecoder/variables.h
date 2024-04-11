@@ -43,7 +43,7 @@ bool GestureAccepted = false;
 
 bool SignPrinted = false;
 
-
+byte SignScore=0;
 
 String WordToSay = "";
 bool HasSpoken = true;

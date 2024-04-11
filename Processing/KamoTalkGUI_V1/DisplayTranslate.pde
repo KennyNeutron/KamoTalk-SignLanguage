@@ -41,7 +41,7 @@ void DisplayTranslate() {
 
   //DrawTerminal
   fill(Color_BLACK);
-  rect(995, 120, 200, 500);
+  rect(995, 120, 200, 250);
 
   fill(Color_RED);
   strokeWeight(0);
@@ -79,7 +79,7 @@ void DisplayTranslate() {
         if (currentGesture=='&') {
           Space=!Space;
           currentGesture=' ';
-        }
+        } 
         if (currentGesture>='[' &&currentGesture<='z' && !HasSpoken) {
           Sentence=savedHandsignWordDisplay[currentGesture-90];
           println("speak:"+str(currentGesture-90));
@@ -87,12 +87,18 @@ void DisplayTranslate() {
           HasSpoken=true;
           AddedToSentence=true;
         } else {
-          Sentence=Sentence+str(currentGesture);
+          if (currentGesture=='$') {
+            Sentence=Sentence.substring(0, Sentence.length()-1);
+          } else if (Sentence.length()==36||Sentence.length()==72||Sentence.length()==108||Sentence.length()==144||Sentence.length()==180) {
+            Sentence=Sentence+"\n"+str(currentGesture);
+          } else {
+            Sentence=Sentence+str(currentGesture);
+          }
           AddedToSentence=true;
         }
       }
     } else {
-      if (currentGesture>='A' && currentGesture<='z') {
+      if (currentGesture>='!' && currentGesture<='z') {
         previousGesture=currentGesture;
       } else if (currentGesture=='&') {
         previousGesture=currentGesture;

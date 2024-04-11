@@ -31,6 +31,7 @@ final int SETTINGS=0x0002;
 TTS tts;
 
 Serial mySerialPort;
+
 int MSerialPort_Val;
 String str_ToSpeak="st";
 

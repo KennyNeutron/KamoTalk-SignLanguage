@@ -11,7 +11,7 @@ void DrawData() {
 
 
   u8g.setPrintPos(0, 9);
-  u8g.print("G: " + String(KamoTalk_GyroX) + "," + String(KamoTalk_GyroY) + "," + String(KamoTalk_GyroZ));
+  u8g.print("G: " + String(KamoTalk_GyroX) + ", " + String(KamoTalk_GyroY) + ", " + String(KamoTalk_GyroZ));
 
 
   u8g.drawStr(0, 21, ch_SensorVal);
@@ -19,7 +19,7 @@ void DrawData() {
   u8g.drawStr(0, 33, ch_PadByte);
 
   u8g.setPrintPos(0, 45);
-  u8g.print("TS: " + String(SignToSave));
+  u8g.print("S: " + String(SignScore));
 
   // u8g.setFont(u8g_font_helvB14);
 

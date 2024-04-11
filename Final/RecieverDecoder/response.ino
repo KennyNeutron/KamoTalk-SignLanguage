@@ -22,7 +22,7 @@ void Correspond() {
 
 
   LetterScore = gesture('B', 80, 50, 80, 150, 250, 440, 230, 300 , 0, 0, 0, 0, 0);
-  if (LetterScore >= 59) {
+  if (LetterScore >= 67) {
     if (LetterScore >= prev_LetterScore) {
       NowSigning = 'B';
       prev_LetterScore = LetterScore;
@@ -142,7 +142,7 @@ void Correspond() {
     }
   }
 
-  LetterScore = gesture('Q', 350, 350, 250, 155, 130, 215, 100, 135, 1, 1, 12, 12, 12 );
+  LetterScore = gesture('Q', 350, 350, 250, 155, 130, 215, 100, 135, 0, 0, 12, 12, 12 );
   if (LetterScore >= 59) {
     if (LetterScore >= prev_LetterScore) {
       NowSigning = 'Q';
@@ -197,7 +197,6 @@ void Correspond() {
       prev_LetterScore = LetterScore;
     }
   }
-
   LetterScore = gesture('X', 80, 50, 80, 215, 160, 200, 105, 142, 1, 1, 12, 12, 12);
   if (LetterScore >= 59) {
     if (LetterScore >= prev_LetterScore) {
@@ -214,13 +213,14 @@ void Correspond() {
     }
   }
 
-  LetterScore = gesture('Z', 20, 300, 180, 123, 200, 180, 100, 145, 0, 0, 12, 12, 12);
+  LetterScore = gesture('Z', 30, 330, 140, 130, 145, 160, 10, 140, 0, 0, 12, 12, 12);
   if (LetterScore >= 59) {
     if (LetterScore >= prev_LetterScore) {
       NowSigning = 'Z';
       prev_LetterScore = LetterScore;
     }
   }
+
 
   LetterScore = gesture('@', 150, 200, 130, 170, 230, 180, 100, 350, 6, 0, 5, 5, 0);
   if (LetterScore >= 59) {
@@ -230,12 +230,108 @@ void Correspond() {
     }
   }
 
+  LetterScore = gesture('&', 140, 200, 125, 180, 10, 150, 0, 130, 15, 15, 15, 15, 15);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '&';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('$', 190, 250, 180, 155, 90, 150, 95, 130, 0, 14, 14, 14, 14);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '$';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('0', 85, 300, 100, 175, 85, 165, 100, 140, 15, 15, 15, 15, 15);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '0';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('1', 90, 270, 120, 130, 136, 160, 100, 155, 14, 0, 13, 13, 13);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '1';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('2', 80, 280, 120, 130, 165, 290, 100, 140, 12, 0, 0, 9, 9);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '2';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('3', 100, 250, 110, 170, 160, 330, 120, 165, 0, 0, 0, 8, 8);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '3';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('4', 80, 320, 100, 115, 170, 300, 145, 256, 0, 0, 0, 0, 0);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '4';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+
+  LetterScore = gesture('5', 80, 320, 100, 230, 170, 300, 145, 256, 0, 0, 0, 0, 0);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '5';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('6', 70, 315, 110, 145, 165, 310, 130, 155, 8, 0, 0, 0, 1);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '6';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('7', 90, 70, 80, 140, 150, 290, 130, 250, 4, 0, 0, 1, 0);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '7';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('8', 90, 70, 80, 140, 150, 290, 130, 250, 2, 0, 1, 0, 0);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '8';
+      prev_LetterScore = LetterScore;
+    }
+  }
+
+  LetterScore = gesture('9', 90, 70, 80, 140, 150, 290, 130, 250, 1, 1, 0, 0, 0);
+  if (LetterScore >= 59) {
+    if (LetterScore >= prev_LetterScore) {
+      NowSigning = '9';
+      prev_LetterScore = LetterScore;
+    }
+  }
   char eepromToSign = '[';
   for (int a = 1; a <= 30; a++) {
     getEEPROM(a);
     if (saved_command == 1) {
       LetterScore = gesture(eepromToSign, saved_Gx, saved_Gy, saved_Gz, saved_fThumb, saved_fIndex, saved_fMiddle, saved_fRing, saved_fPinky, saved_pThumb, saved_pIndex, saved_pMiddle, saved_pRing, saved_pPinky);
-      if (LetterScore >= 59) {
+      if (LetterScore >= 65) {
         if (LetterScore >= prev_LetterScore) {
           NowSigning = eepromToSign;
           prev_LetterScore = LetterScore;
@@ -245,8 +341,10 @@ void Correspond() {
     eepromToSign++;
   }
 
+  SignScore = prev_LetterScore;
 
   signing();
+
   if (prev_LetterScore == 0) {
     NowSigning = ' ';
     SignPrinted = false;
