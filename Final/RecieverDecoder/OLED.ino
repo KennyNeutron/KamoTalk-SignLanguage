@@ -2,10 +2,10 @@ void DrawData() {
 
 
   char  ch_SensorVal[100] = "";
-  sprintf(ch_SensorVal, "F: %d,%d,%d,%d,%d", Val_Thumb, Val_Index, Val_Middle, Val_Ring, Val_Pinky);
+  sprintf(ch_SensorVal, "F: %d, %d, %d, %d,%d", Val_Thumb, Val_Index, Val_Middle, Val_Ring, Val_Pinky);
 
   char ch_PadByte[30] = "";
-  sprintf(ch_PadByte, "P: %d,%d,%d,%d,%d", ThumbByte, IndexByte, MiddleByte, RingByte, PinkyByte);
+  sprintf(ch_PadByte, "P: %d, %d, %d, %d, %d", ThumbByte, IndexByte, MiddleByte, RingByte, PinkyByte);
 
   u8g.setFont(u8g_font_helvR08);
 
@@ -21,7 +21,7 @@ void DrawData() {
   u8g.setPrintPos(0, 45);
   u8g.print("S: " + String(SignScore));
 
-  // u8g.setFont(u8g_font_helvB14);
+  u8g.setFont(u8g_font_helvB14);
 
   char ch_NowSigning[2] = { ' ' };
   if (SignPrinted) {
@@ -30,7 +30,7 @@ void DrawData() {
     sprintf(ch_NowSigning, "%c", NowSigning);
   }
 
-  u8g.drawStr(64, 55, ch_NowSigning);
+  u8g.drawStr(100, 55, ch_NowSigning);
 }
 
 void DrawLetter() {

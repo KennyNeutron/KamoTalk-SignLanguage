@@ -222,10 +222,10 @@ void Correspond() {
   }
 
 
-  LetterScore = gesture('@', 150, 200, 130, 170, 230, 180, 100, 350, 6, 0, 5, 5, 0);
+  LetterScore = gesture('#', 150, 200, 130, 170, 230, 180, 100, 350, 6, 0, 5, 5, 0);
   if (LetterScore >= 59) {
     if (LetterScore >= prev_LetterScore) {
-      NowSigning = '@';
+      NowSigning = '#';
       prev_LetterScore = LetterScore;
     }
   }
@@ -279,7 +279,7 @@ void Correspond() {
   }
 
   LetterScore = gesture('4', 80, 320, 100, 115, 170, 300, 145, 256, 0, 0, 0, 0, 0);
-  if (LetterScore >= 59) {
+  if (LetterScore >= 62) {
     if (LetterScore >= prev_LetterScore) {
       NowSigning = '4';
       prev_LetterScore = LetterScore;

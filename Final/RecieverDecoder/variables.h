@@ -66,3 +66,5 @@ uint8_t saved_pIndex=0;
 uint8_t saved_pMiddle=0;
 uint8_t saved_pRing=0;
 uint8_t saved_pPinky=0;
+
+String defaultPassword="6789";
