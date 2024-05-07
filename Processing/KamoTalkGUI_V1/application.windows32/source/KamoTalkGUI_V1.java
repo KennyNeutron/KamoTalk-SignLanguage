@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class KamoTalkGUI_V1 extends PApplet {
 
-//KamoTalk V1.0.0 //<>//
+//KamoTalk V1.0.0
 
 
 
@@ -137,11 +137,11 @@ public void serialPrintOnScreen(String StrToPrint) {
 public void mousePressed() {
   //tts.speak("PRESSED ");
   //tts.speak("The quick brown fox jumps over the lazy dog");
-  if (ButtonHovered(TRANSLATE) && currentScreen==0) {
+  if (ButtonHovered(TRANSLATE) && currentScreen==0 &&pwMatch()) {
     //tts.speak("TRANSLATE");
     DisplayHome_init=false;
     currentScreen=0x1000;
-  } else if (ButtonHovered(ADD_GESTURE) && currentScreen==0) {
+  } else if (ButtonHovered(ADD_GESTURE) && currentScreen==0&&pwMatch()) {
     //tts.speak("ADD GESTURE");
     DisplayHome_init=false;
     currentScreen=0x2000;
@@ -194,9 +194,9 @@ public void keyPressed() {
 
   if (currentScreen==0x2000) {
     println("f:"+PApplet.parseInt(key));
-    if (key>='!' && key<='z' && currentlyDisplaying.length()<250) {
+    if (key>='!' && key<='z' && currentlyDisplaying.length()<100) {
       currentToSave=currentToSave+key;
-      if (currentlyDisplaying.length()==65 || currentlyDisplaying.length()==130 || currentlyDisplaying.length()==195) {
+      if (currentlyDisplaying.length()==30 || currentlyDisplaying.length()==60 || currentlyDisplaying.length()==90|| currentlyDisplaying.length()==120) {
         currentlyDisplaying=currentlyDisplaying+"\n"+key;
       } else {
         currentlyDisplaying=currentlyDisplaying+key;
@@ -208,7 +208,7 @@ public void keyPressed() {
         currentToSave=currentToSave.substring(0, currentToSave.length()-1);
       }
     } else if (key==32) {
-      if (currentlyDisplaying.length()==65 || currentlyDisplaying.length()==130 || currentlyDisplaying.length()==195) {
+      if (currentlyDisplaying.length()==30 || currentlyDisplaying.length()==60 || currentlyDisplaying.length()==90 || currentlyDisplaying.length()==120) {
         currentlyDisplaying=currentlyDisplaying+"\n"+key;
       } else {
         currentlyDisplaying=currentlyDisplaying+ " ";
@@ -292,14 +292,14 @@ public void DisplayAddgesture() {
 
   fill(Color_GREEN);
   textFont(Font_Default_Regular, 45);
-  textSize(20);
+  textSize(40);
   if (currentlyDisplaying.length()==0) {
     text("NONE", 230, 170);
   } else {
     text(currentlyDisplaying, 230, 170);
   }
 
-  text(currentlyDisplaying.length()+"/250", 950, 120);
+  text(currentlyDisplaying.length()+"/100", 950, 100);
 
   if (mouseX>25 && mouseX<100 && mouseY>620 && mouseY<645) {
     CreateButton_XSmall(25, 620, Color_ORANGE, Color_BLACK, "TALK", Font_Default_Bold, Color_BLACK, 15);
@@ -445,7 +445,6 @@ public void DisplayAddgesture_ButtonFunctions() {
   }
 }
 
-
 boolean DisplaySettings_init=false;
 
 String pwEntered="";
@@ -479,9 +478,9 @@ public void DisplaySettings() {
   }
 
   if (mouseX>760 && mouseX<835 && mouseY>160 && mouseY<185) {
-    CreateButton_XSmall(760, 160, Color_YELLOW, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 15);
+    CreateButton_XSmall(760, 160, Color_YELLOW, Color_BLACK, "ENTER", Font_Default_Bold, Color_BLACK, 15);
   } else {
-    CreateButton_XSmall(760, 160, Color_GREEN, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 15);
+    CreateButton_XSmall(760, 160, Color_GREEN, Color_BLACK, "ENTER", Font_Default_Bold, Color_BLACK, 15);
   }
 
 
@@ -591,7 +590,6 @@ public boolean pwMatch() {
   }
 }
 
-
 boolean DisplayTranslate_init=false;
 
 char currentGesture;
@@ -608,9 +606,14 @@ boolean HasSpoken=false;
 
 boolean Space=false;
 
+boolean AllowTranslate=false;
+int LastMillisTranslate=0;
 
 
 public void DisplayTranslate() {
+  if (millis()-LastMillisTranslate>3000) {
+    AllowTranslate=true;
+  }
   background(ColorBG);
 
   if (!DisplayTranslate_init) {
@@ -647,9 +650,9 @@ public void DisplayTranslate() {
   } else {
     fill(0xff0000ff);
   }
-  textSize(30);
+  textSize(55);
   textAlign(LEFT, TOP);
-  text(Sentence, 100, 120);
+  text(Sentence, 30, 120);
 
 
   if (GestureCount>0 || currentGesture=='@') {      
@@ -663,17 +666,48 @@ public void DisplayTranslate() {
     }
   }
 
-  if (mySerialPort.available()>0) {
+  if (mySerialPort.available()>0 && AllowTranslate) {
     MSerialPort_Val=mySerialPort.read();
     currentGesture=PApplet.parseChar(MSerialPort_Val);
+
     if (currentGesture==previousGesture) {
       GestureCount++;
-      if (!AddedToSentence && GestureCount>=6) {
-        if (currentGesture=='&') {
+      //println("Added to Sentence:"+AddedToSentence);
+      if (!AddedToSentence && GestureCount>=8) {
+          if (currentGesture=='#' && !HasSpoken) {
+        fill(0xff00ff00);
+        textSize(20);
+        textAlign(CENTER, TOP);
+        text("TALK", 1100, 190);
+        tts.speak(Sentence);
+        HasSpoken=true;
+        AddedToSentence=true;
+        GestureCount=0;
+        previousGesture=30;
+      }else if (currentGesture=='}') {
+          Sentence="";
+          AddedToSentence=true;
+          GestureCount=0;
+        } else if (currentGesture=='&') {
           Space=!Space;
           currentGesture=' ';
         } else if (currentGesture=='$') {
-          Sentence=Sentence.substring(0, Sentence.length()-1);
+          if (Sentence.charAt(Sentence.length()-1)=='n') {
+            Sentence=Sentence.substring(0, Sentence.length()-2);
+            AddedToSentence=true;
+            GestureCount=0;
+            previousGesture=30;
+          } else if (Sentence.charAt(Sentence.length()-1)==' ') {
+            Space=!Space;
+            Sentence=Sentence.substring(0, Sentence.length()-1);
+            AddedToSentence=true;
+            GestureCount=0;
+          } else {
+            Sentence=Sentence.substring(0, Sentence.length()-1);
+            AddedToSentence=false;
+            GestureCount=0;
+            previousGesture=30;
+          }
         }
 
         if (currentGesture>='[' &&currentGesture<='z' && !HasSpoken) {
@@ -683,10 +717,12 @@ public void DisplayTranslate() {
           HasSpoken=true;
           AddedToSentence=true;
         } else {
-          if (Sentence.length()==36||Sentence.length()==72||Sentence.length()==108||Sentence.length()==144||Sentence.length()==180) {
-            Sentence=Sentence+"\n"+str(currentGesture);
-          } else {
+          if (Sentence.length()==26||Sentence.length()==52||Sentence.length()==78||Sentence.length()==104) {
             if (currentGesture!='$') {
+              Sentence=Sentence+"\n"+str(currentGesture);
+            }
+          } else {
+            if (currentGesture!='$' && currentGesture!='}' && currentGesture!='#' ) {
               Sentence=Sentence+str(currentGesture);
             }
           }
@@ -694,15 +730,10 @@ public void DisplayTranslate() {
         }
       }
     } else {
-      if (currentGesture>='!' && currentGesture<='z' && currentGesture!='#' ) {
+      if (currentGesture>='!' && currentGesture<='z' && currentGesture!='#') {
         previousGesture=currentGesture;
-      } else if (currentGesture=='#' && !HasSpoken) {
-        fill(0xff00ff00);
-        textSize(20);
-        textAlign(CENTER, TOP);
-        text("TALK", 1100, 190);
-        tts.speak(Sentence);
-        HasSpoken=true;
+      } else if (currentGesture<='}') {
+        previousGesture=currentGesture;
       }
       GestureCount=0;
       AddedToSentence=false;
@@ -759,6 +790,8 @@ public void DisplayTranslate_setup() {
 
   Space=false;
   LoadSavedFile();
+  AllowTranslate=false;
+  LastMillisTranslate=millis();
 }
 
 
@@ -774,7 +807,7 @@ public void DisplayTranslate_ButtonFunctions() {
     currentScreen=0x1100;
     DisplayTranslate_init=false;
   }
-  
+
   initCOMport();
 }
 
@@ -881,7 +914,7 @@ public void DisplayHome() {
   }
   fill(0xff000000);
   strokeWeight(0);
-  textFont(Font_Default_Regular, 30);
+  textFont(Font_Default_Bold, 30);
   textSize(50);
   textAlign(CENTER, CENTER);
   text("KAMOTALK 2024", width/2, 30);

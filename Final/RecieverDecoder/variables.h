@@ -28,8 +28,8 @@ bool thumb_to_middle = false;
 bool thumb_to_ring = false;
 bool thumb_to_pinky = false;
 
-int UnitTolerance = 40;
-float GyroTolerance = 30.00;
+int UnitTolerance = 5;
+float GyroTolerance = 50.00;
 
 float KamoTalk_GyroX = 0.00;
 float KamoTalk_GyroY = 0.00;

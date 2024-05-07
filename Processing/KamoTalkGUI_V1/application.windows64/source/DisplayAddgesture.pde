@@ -40,14 +40,14 @@ void DisplayAddgesture() {
 
   fill(Color_GREEN);
   textFont(Font_Default_Regular, 45);
-  textSize(20);
+  textSize(40);
   if (currentlyDisplaying.length()==0) {
     text("NONE", 230, 170);
   } else {
     text(currentlyDisplaying, 230, 170);
   }
 
-  text(currentlyDisplaying.length()+"/250", 950, 120);
+  text(currentlyDisplaying.length()+"/100", 950, 100);
 
   if (mouseX>25 && mouseX<100 && mouseY>620 && mouseY<645) {
     CreateButton_XSmall(25, 620, Color_ORANGE, Color_BLACK, "TALK", Font_Default_Bold, Color_BLACK, 15);

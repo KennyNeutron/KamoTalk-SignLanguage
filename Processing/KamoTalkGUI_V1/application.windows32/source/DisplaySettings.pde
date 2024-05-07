@@ -32,9 +32,9 @@ void DisplaySettings() {
   }
 
   if (mouseX>760 && mouseX<835 && mouseY>160 && mouseY<185) {
-    CreateButton_XSmall(760, 160, Color_YELLOW, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 15);
+    CreateButton_XSmall(760, 160, Color_YELLOW, Color_BLACK, "ENTER", Font_Default_Bold, Color_BLACK, 15);
   } else {
-    CreateButton_XSmall(760, 160, Color_GREEN, Color_BLACK, "SAVE", Font_Default_Bold, Color_BLACK, 15);
+    CreateButton_XSmall(760, 160, Color_GREEN, Color_BLACK, "ENTER", Font_Default_Bold, Color_BLACK, 15);
   }
 
 

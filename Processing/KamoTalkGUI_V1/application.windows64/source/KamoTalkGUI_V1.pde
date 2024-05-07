@@ -1,4 +1,4 @@
-//KamoTalk V1.0.0 //<>//
+//KamoTalk V1.0.0
 
 import guru.ttslib.*;
 import processing.serial.*;
@@ -118,11 +118,11 @@ void serialPrintOnScreen(String StrToPrint) {
 void mousePressed() {
   //tts.speak("PRESSED ");
   //tts.speak("The quick brown fox jumps over the lazy dog");
-  if (ButtonHovered(TRANSLATE) && currentScreen==0) {
+  if (ButtonHovered(TRANSLATE) && currentScreen==0 &&pwMatch()) {
     //tts.speak("TRANSLATE");
     DisplayHome_init=false;
     currentScreen=0x1000;
-  } else if (ButtonHovered(ADD_GESTURE) && currentScreen==0) {
+  } else if (ButtonHovered(ADD_GESTURE) && currentScreen==0&&pwMatch()) {
     //tts.speak("ADD GESTURE");
     DisplayHome_init=false;
     currentScreen=0x2000;
@@ -175,9 +175,9 @@ void keyPressed() {
 
   if (currentScreen==0x2000) {
     println("f:"+int(key));
-    if (key>='!' && key<='z' && currentlyDisplaying.length()<250) {
+    if (key>='!' && key<='z' && currentlyDisplaying.length()<100) {
       currentToSave=currentToSave+key;
-      if (currentlyDisplaying.length()==65 || currentlyDisplaying.length()==130 || currentlyDisplaying.length()==195) {
+      if (currentlyDisplaying.length()==30 || currentlyDisplaying.length()==60 || currentlyDisplaying.length()==90|| currentlyDisplaying.length()==120) {
         currentlyDisplaying=currentlyDisplaying+"\n"+key;
       } else {
         currentlyDisplaying=currentlyDisplaying+key;
@@ -189,7 +189,7 @@ void keyPressed() {
         currentToSave=currentToSave.substring(0, currentToSave.length()-1);
       }
     } else if (key==32) {
-      if (currentlyDisplaying.length()==65 || currentlyDisplaying.length()==130 || currentlyDisplaying.length()==195) {
+      if (currentlyDisplaying.length()==30 || currentlyDisplaying.length()==60 || currentlyDisplaying.length()==90 || currentlyDisplaying.length()==120) {
         currentlyDisplaying=currentlyDisplaying+"\n"+key;
       } else {
         currentlyDisplaying=currentlyDisplaying+ " ";

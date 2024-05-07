@@ -1,6 +1,6 @@
 id,word,display,pw,comport
-1,Hello!,Hello!,6789,4
-2,How are you?,How are you?,6789,
+1,,,6789,4
+2,,,6789,
 3,,,,
 4,,,,
 5,,,,

@@ -15,9 +15,14 @@ boolean HasSpoken=false;
 
 boolean Space=false;
 
+boolean AllowTranslate=false;
+int LastMillisTranslate=0;
 
 
 void DisplayTranslate() {
+  if (millis()-LastMillisTranslate>3000) {
+    AllowTranslate=true;
+  }
   background(ColorBG);
 
   if (!DisplayTranslate_init) {
@@ -54,9 +59,9 @@ void DisplayTranslate() {
   } else {
     fill(#0000ff);
   }
-  textSize(30);
+  textSize(55);
   textAlign(LEFT, TOP);
-  text(Sentence, 100, 120);
+  text(Sentence, 30, 120);
 
 
   if (GestureCount>0 || currentGesture=='@') {      
@@ -70,17 +75,48 @@ void DisplayTranslate() {
     }
   }
 
-  if (mySerialPort.available()>0) {
+  if (mySerialPort.available()>0 && AllowTranslate) {
     MSerialPort_Val=mySerialPort.read();
     currentGesture=char(MSerialPort_Val);
+
     if (currentGesture==previousGesture) {
       GestureCount++;
-      if (!AddedToSentence && GestureCount>=6) {
-        if (currentGesture=='&') {
+      //println("Added to Sentence:"+AddedToSentence);
+      if (!AddedToSentence && GestureCount>=8) {
+          if (currentGesture=='#' && !HasSpoken) {
+        fill(#00ff00);
+        textSize(20);
+        textAlign(CENTER, TOP);
+        text("TALK", 1100, 190);
+        tts.speak(Sentence);
+        HasSpoken=true;
+        AddedToSentence=true;
+        GestureCount=0;
+        previousGesture=30;
+      }else if (currentGesture=='}') {
+          Sentence="";
+          AddedToSentence=true;
+          GestureCount=0;
+        } else if (currentGesture=='&') {
           Space=!Space;
           currentGesture=' ';
         } else if (currentGesture=='$') {
-          Sentence=Sentence.substring(0, Sentence.length()-1);
+          if (Sentence.charAt(Sentence.length()-1)=='n') {
+            Sentence=Sentence.substring(0, Sentence.length()-2);
+            AddedToSentence=true;
+            GestureCount=0;
+            previousGesture=30;
+          } else if (Sentence.charAt(Sentence.length()-1)==' ') {
+            Space=!Space;
+            Sentence=Sentence.substring(0, Sentence.length()-1);
+            AddedToSentence=true;
+            GestureCount=0;
+          } else {
+            Sentence=Sentence.substring(0, Sentence.length()-1);
+            AddedToSentence=false;
+            GestureCount=0;
+            previousGesture=30;
+          }
         }
 
         if (currentGesture>='[' &&currentGesture<='z' && !HasSpoken) {
@@ -90,10 +126,12 @@ void DisplayTranslate() {
           HasSpoken=true;
           AddedToSentence=true;
         } else {
-          if (Sentence.length()==36||Sentence.length()==72||Sentence.length()==108||Sentence.length()==144||Sentence.length()==180) {
-            Sentence=Sentence+"\n"+str(currentGesture);
-          } else {
+          if (Sentence.length()==26||Sentence.length()==52||Sentence.length()==78||Sentence.length()==104) {
             if (currentGesture!='$') {
+              Sentence=Sentence+"\n"+str(currentGesture);
+            }
+          } else {
+            if (currentGesture!='$' && currentGesture!='}' && currentGesture!='#' ) {
               Sentence=Sentence+str(currentGesture);
             }
           }
@@ -101,15 +139,10 @@ void DisplayTranslate() {
         }
       }
     } else {
-      if (currentGesture>='!' && currentGesture<='z' && currentGesture!='#' ) {
+      if (currentGesture>='!' && currentGesture<='z' && currentGesture!='#') {
         previousGesture=currentGesture;
-      } else if (currentGesture=='#' && !HasSpoken) {
-        fill(#00ff00);
-        textSize(20);
-        textAlign(CENTER, TOP);
-        text("TALK", 1100, 190);
-        tts.speak(Sentence);
-        HasSpoken=true;
+      } else if (currentGesture<='}') {
+        previousGesture=currentGesture;
       }
       GestureCount=0;
       AddedToSentence=false;
@@ -166,6 +199,8 @@ void DisplayTranslate_setup() {
 
   Space=false;
   LoadSavedFile();
+  AllowTranslate=false;
+  LastMillisTranslate=millis();
 }
 
 
@@ -181,6 +216,6 @@ void DisplayTranslate_ButtonFunctions() {
     currentScreen=0x1100;
     DisplayTranslate_init=false;
   }
-  
+
   initCOMport();
 }

@@ -3,12 +3,11 @@
 # type "java -jar voicefile.jar".
 #
 # Entries should look like:
-#java -jar voicefile.jar
-com.sun.speech.freetts.en.us.cmu_time_awb.AlanVoiceDirectory
-com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory
-
 #com.sun.speech.freetts.en.us.cmu_time_awb.AlanVoiceDirectory
 #com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory
 
+com.sun.speech.freetts.en.us.cmu_time_awb.AlanVoiceDirectory
+com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory
+
 # Uncomment to allow MBROLA voices:
-#de.dfki.lt.freetts.en.us.MbrolaVoiceDirectory
+de.dfki.lt.freetts.en.us.MbrolaVoiceDirectory

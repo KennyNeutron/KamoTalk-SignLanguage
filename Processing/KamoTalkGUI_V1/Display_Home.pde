@@ -12,7 +12,7 @@ void DisplayHome() {
   }
   fill(#000000);
   strokeWeight(0);
-  textFont(Font_Default_Regular, 30);
+  textFont(Font_Default_Bold, 30);
   textSize(50);
   textAlign(CENTER, CENTER);
   text("KAMOTALK 2024", width/2, 30);
