@@ -87,7 +87,8 @@ void draw() {
     DisplayAddgesture();
     break;
   case 0x3000:
-    DisplaySettings();
+    //DisplaySettings();
+    DisplayTutorial();
     break;
   default:
     DisplayHome();

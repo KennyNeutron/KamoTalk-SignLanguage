@@ -81,9 +81,9 @@ void PrintButton(int buttonAddress) {
 
   case SETTINGS:
     if (!ButtonHovered(SETTINGS)) {
-      CreateButton_Large((width/2)-300, 450, Color_GREEN, Color_BLACK, "SETTINGS", Font_Default_Bold, Color_BLACK, 40);
+      CreateButton_Large((width/2)-300, 450, Color_GREEN, Color_BLACK, "TUTORIAL", Font_Default_Bold, Color_BLACK, 40);
     } else {
-      CreateButton_Large((width/2)-300, 450, Color_YELLOW, Color_BLACK, "SETTINGS", Font_Default_Bold, Color_BLACK, 40);
+      CreateButton_Large((width/2)-300, 450, Color_YELLOW, Color_BLACK, "TUTORIAL", Font_Default_Bold, Color_BLACK, 40);
     }
 
     break;

@@ -57,7 +57,7 @@ void DisplayTranslate() {
   if (!Space) {
     fill(#00ff00);
   } else {
-    fill(#0000ff);
+    fill(#ffff33);
   }
   textSize(55);
   textAlign(LEFT, TOP);
